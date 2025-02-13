@@ -3,6 +3,8 @@ import TodoTemplate from "./TodoTemplate";
 import TodoInsert from "./TodoInsert";
 import TodoList from "./TodoList";
 
+import {TodoProvider} from "./TodoContext";
+
 const App = () => {
 
     const initialTodos = [
@@ -23,40 +25,13 @@ const App = () => {
         },
     ];
 
-    const [todos, setTodos] = useState(
-        initialTodos
-    );
-
-    const nextId = useRef(todos.length);
-
-    const onInsert = useCallback(text => {
-        const newTodo = {
-            id: nextId.current,
-            text: text,
-            checked: false,
-        };
-        setTodos(todos.concat(newTodo));
-        nextId.current += 1;
-    }, [todos]);
-
-    const onRemove = useCallback(id=> {
-        const removedTodos = todos.filter(todo => todo.id !== id);
-        setTodos(removedTodos);
-    }, [todos]);
-
-    const onToggle = useCallback(id=> {
-        setTodos(
-            todos.map(todo=>
-                todo.id === id ? {...todo, checked: !todo.checked}: todo
-            )
-        );
-    }, [todos]);
-
     return (
-        <TodoTemplate>
-            <TodoInsert onInsert={onInsert}/>
-            <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle} />
-        </TodoTemplate>
+        <TodoProvider initialTodos={initialTodos}>
+            <TodoTemplate>
+                <TodoInsert />
+                <TodoList />
+            </TodoTemplate>
+        </TodoProvider>
     );
 }
 

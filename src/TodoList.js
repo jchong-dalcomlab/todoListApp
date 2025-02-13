@@ -1,14 +1,17 @@
 import React from 'react'
 import TodoListItem from "./TodoListItem";
 import './TodoList.scss'
+import {useTodoState} from "./TodoContext";
 
-const TodoList = ({todos, onRemove, onToggle}) => {
+const TodoList = () => {
+
+    const todos = useTodoState();
 
     return (
         <div className='TodoList'>
             {
                 todos.map(todo => (
-                    <TodoListItem todoItem={todo} onRemove={onRemove} onToggle={onToggle} />
+                    <TodoListItem key={todo.id} todoItem={todo} />
                 ))
             }
         </div>
