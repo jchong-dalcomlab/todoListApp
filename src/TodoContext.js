@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useReducer, useRef} from 'react';
+import React, {createContext, useContext, useEffect, useReducer, useRef} from 'react';
 
 const TodoStateContext = createContext();
 const TodoDispatchContext = createContext();
@@ -12,14 +12,24 @@ function todoReducer(state, action) {
             return state.filter(todo => todo.id !== action.id);
         case 'TOGGLE' :
             return state.map(todo => todo.id === action.id ? {...todo, checked: !todo.checked} : todo );
+        case 'SET_TODOS' :
+            return action.todos;
         default :
             throw new Error(`Unhandled action type: ${action.type}`);
     }
 }
 
-export function TodoProvider({initialTodos, children}) {
+export function TodoProvider({initialTodos, onUpdateTodos, children}) {
     const [todos, dispatch] = useReducer(todoReducer, initialTodos);
     const todoIndex = useRef(initialTodos.length + 1);
+
+    useEffect(() => {
+        onUpdateTodos?.(todos);
+    }, [todos]);
+
+    useEffect(() => {
+        dispatch({ type: 'SET_TODOS', todos: initialTodos });
+    }, [initialTodos]);
 
     return (
         <TodoStateContext.Provider value={todos}>
