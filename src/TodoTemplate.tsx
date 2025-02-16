@@ -1,8 +1,19 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import './TodoTemplate.scss'
 import UsersDropDown from "./UsersDropDown";
 
-const TodoTemplate = ({allUsersTodos, onSelect, children}) => {
+interface User {
+    userId: number;
+    userName: string;
+}
+
+interface TodoTemplateProps {
+    allUsersTodos: User[];
+    onSelect: (userId: string) => void;
+    children: ReactNode;
+}
+
+const TodoTemplate: React.FC<TodoTemplateProps> = ({ allUsersTodos, onSelect, children }) => {
 
     return (
         <div className='TodTemplate'>

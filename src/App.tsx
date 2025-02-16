@@ -2,14 +2,27 @@ import React, {useEffect, useState} from 'react'
 import TodoTemplate from "./TodoTemplate";
 import TodoInsert from "./TodoInsert";
 import TodoList from "./TodoList";
-
 import {TodoProvider} from "./TodoContext";
 
-const App = () => {
+interface Todo {
+    id: number;
+    text: string;
+    checked: boolean;
+}
 
-    const initialAllData = [
+interface UserTodo {
+    userName: string;
+    userId: number;
+    todos: Todo[];
+}
+
+const App: React.FC = () => {
+
+    const initialAllData: UserTodo[] = [
         {
-            userName: '홍길동', userId: 1, todos: [
+            userName: '홍길동',
+            userId: 1,
+            todos: [
                 {
                     id: 1,
                     text: '사용자 인터페이스 구성',
@@ -28,7 +41,9 @@ const App = () => {
             ],
         },
         {
-            userName: '심청이', userId: 2, todos: [
+            userName: '심청이',
+            userId: 2,
+            todos: [
                 {
                     id: 1,
                     text: '신입사원 인사카드 생성',
@@ -48,16 +63,16 @@ const App = () => {
         },
     ];
 
-    const [userKey, setUserKey] = useState(0);
-    const [allUsersTodos, setAllUsersTodos] = useState(initialAllData);
+    const [userKey, setUserKey] = useState<number>(0);
+    const [allUsersTodos, setAllUsersTodos] = useState<UserTodo[]>(initialAllData);
 
-    const onSelect = (key) => {
+    const onSelect = (key: string): void => {
         console.log(`Selected Key: ${key}`);
         setUserKey(parseInt(key, 10)-1);
     }
 
-    function getOnUpdateTodos() {
-        return (updatedTodos) => {
+    function getOnUpdateTodos(): (updatedTodos: Todo[]) => void {
+        return (updatedTodos: Todo[]): void => {
             const newUsers = [...allUsersTodos];
             newUsers[userKey].todos = updatedTodos;
             setAllUsersTodos(newUsers);
@@ -65,8 +80,10 @@ const App = () => {
     }
 
     return (
-        <TodoProvider initialTodos={allUsersTodos[userKey].todos}
-                      onUpdateTodos={getOnUpdateTodos()}>
+        <TodoProvider
+            initialTodos={allUsersTodos[userKey].todos}
+            onUpdateTodos={getOnUpdateTodos()}
+        >
             <TodoTemplate allUsersTodos={allUsersTodos} onSelect={onSelect}>
                 <TodoInsert />
                 <TodoList />
